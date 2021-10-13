@@ -68,12 +68,12 @@ var getData = function () {
 
 
 var init = function (){
-    var getIP = 'http://ip-api.com/json/'
+    var getIP = 'http://ipwhois.app/json/'
     fetch(getIP)
     .then(function (response){
         response.json().then(function (data){
-            var lat = data.lat
-            var lon = data.lon
+            var lat = data.latitude
+            var lon = data.longitude
             cityHtml.textContent = "Your current location: " +data.city
             console.log(lon)
             oneCall(lat,lon)
