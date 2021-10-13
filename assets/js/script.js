@@ -68,7 +68,7 @@ var getData = function () {
 
 
 var init = function (){
-    var getIP = 'http://ipwhois.app/json/'
+    var getIP = 'https://ipwhois.app/json/'
     fetch(getIP)
     .then(function (response){
         response.json().then(function (data){
