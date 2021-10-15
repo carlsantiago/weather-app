@@ -1,0 +1,40 @@
+.container {
+  width: auto;
+}
+
+.card {
+  width: 18rem;
+  height: 15rem;
+}
+
+.result {
+  font-size: 1.1rem;
+  width: auto;
+  padding-top: 20px;
+}
+
+.five {
+  width: 80vw;
+}
+
+#fiveH1 {
+  margin-top: -30px;
+}
+
+#currentIcon {
+  max-width: 90%;
+  padding: 0;
+}
+
+.card-table {
+  margin: 0;
+}
+
+.fiveCard {
+  height: 13rem;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
