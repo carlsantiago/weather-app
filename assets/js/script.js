@@ -121,8 +121,7 @@ var fiveDay = function (data) {
 }
 
 var getData = function (input) {
-    console.log(input)
-    
+
     var city = cityApi + input + key;
 
     fetch(city)
@@ -137,6 +136,7 @@ var getData = function (input) {
             })
         } else {
             alert("Invalid City Name")
+            location.reload();
         }
     })
 }
