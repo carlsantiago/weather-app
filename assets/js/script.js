@@ -8,8 +8,9 @@ var humidityHtml = document.querySelector('.humidity')
 var uvHtml = document.querySelector('.uv')
 var currentHTML = document.querySelector('.current')
 var imgDiv = document.getElementById('currentIcon')
-var key = "&appid=294893130f9503ab3af461b6a81901e4"
+var cityUl = document.querySelector('.cityUl')
 
+var key = "&appid=294893130f9503ab3af461b6a81901e4"
 var cityApi = "https://api.openweathermap.org/data/2.5/weather?q="
 var oneCallApi = "https://api.openweathermap.org/data/2.5/onecall?"
 var metric = "&units=metric"
@@ -29,15 +30,23 @@ var oneCall = function (lat,lon,) {
                 var windSpeed = Math.round(data.current.wind_speed * 3.6)
                 windHtml.textContent = "Wind: " + windSpeed + " km/h"
                 humidityHtml.textContent = "Humidity: " + data.current.humidity + "%"
-                uvHtml.textContent = "UV Index: " + data.current.uvi
+                var uvNumber = data.current.uvi
+
+                if (uvNumber < 2) {
+                    uvHtml.setAttribute("class", "text-success")
+                } else if (uvNumber == 3,4,5){
+                    uvHtml.setAttribute("class", "text-warning")
+                } else if (uvNumber == 6,7){
+                    uvHtml.setAttribute("class", "text-danger")
+                }
+
+                uvHtml.textContent = "UV Index: " + uvNumber
                 var img = document.createElement('img');
                 img.setAttribute("src", icon + data.current.weather[0].icon + "@4x.png")
                 img.setAttribute("id", "icon")
                 imgDiv.appendChild(img);
-
-                console.log (data)
                 fiveDay(data)
-                console.log(data.current.weather[0].icon)
+
             })
         }
     })
@@ -109,19 +118,14 @@ var fiveDay = function (data) {
     }
 }
 
+var getData = function (input) {
+    console.log(input)
+    var city = cityApi + input + key;
 
-var getData = function () {
-    var city = cityApi + userInput.value + key;
     fetch(city)
     .then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-        
-                var user = function(s){
-                    var x = s[0].toUpperCase()+s.slice(1);
-                    cityHtml.textContent = x
-                }
-                user(userInput.value)
                 var lat = data.coord.lat
                 var lon = data.coord.lon
                 oneCall(lat,lon);
@@ -145,18 +149,65 @@ var ipLocation = function (){
 
             var lat = data.latitude
             var lon = data.longitude
-            cityHtml.textContent = "Location based on IP: " +data.city
-            console.log(lon)
-            oneCall(lat,lon)
- 
-        })
+            cityHtml.textContent = "IP Location: " +data.city
 
+            oneCall(lat,lon)
+            render();
+        })
     })
 }
 
-// Remove current image on search
-var removeImage = function (){
+
+var storedArr = []
+
+var newSearch = function (){
+    // Remove current image on search
     document.getElementById('icon').remove();
+    var city = userInput.value
+    storedArr.push(city)
+    localStorage.setItem("user", JSON.stringify(storedArr));
+    getData(city);
+    render();
+ }
+
+ var storedCity = JSON.parse(localStorage.getItem("user"));
+
+ var render = function (){
+
+    cityUl.innerHTML=""
+    console.log(storedCity)
+    console.log(storedArr)
+    for (var i = 0 ; i < storedArr.length; i++){
+     
+        var li = document.createElement('li')
+        li.setAttribute("class","list-group-item bg-dark border-white")
+        var a = document.createElement('a')
+        var capCity = storedArr[i][0].toUpperCase()+storedArr[i].slice(1);
+        var searchContainer = document.querySelector(".search-container")
+        var searchDiv = document.getElementById("searchDiv")
+        searchDiv.setAttribute("class", "card border-white mt-2")
+        searchDiv.setAttribute("style", "height: auto")
+        searchContainer.appendChild(searchDiv)
+        a.textContent = capCity
+        a.setAttribute("href","#")
+        a.setAttribute("onclick","getData(value)")
+
+        li.appendChild(a)
+        cityUl.appendChild(li)
+        cityHtml.textContent = capCity
+
+    }
+ }
+
+var searchedCity = function (){
+    var historyCity = document.querySelector(".searched")
+    historyCity.addEventListener('click',searchedCity);
+    console.log("clicked")
+    var cityName = historyCity.value
+    getData(cityName)
 }
-button.addEventListener('click',getData);
+
+
+button.addEventListener('click',newSearch);
+
 ipLocation()

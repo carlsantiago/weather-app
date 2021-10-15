@@ -24,7 +24,7 @@
     <table class="card-table table text-white">
       <thead>
         <tr>
-          <th scope="col">
+          <th>
             <h4 class="card-title p-2 city-name">City Name</h4>
             <h5 class="card-title p-2 date">Date</h5></th>
         </tr>
@@ -41,7 +41,7 @@
           <td class="not-first-cell humidity">Humidity</td>
         </tr>
         <tr>
-          <td class="not-first-cell uv">UV Index</td>
+          <td class="not-first-cell uv ">UV Index</td>
         </tr>
       </tbody>
     </table>
@@ -50,28 +50,24 @@
 <br/>
 
 <!-- 5 Day Forecast -->
-<section class="text-center flex-column">
-  <h1 id="fiveH1" class="text-dark">5 Day Forecast</h1>
-</section>
 
-<div class = "fiveContainer d-flex justify-content-center">
-<section class="five row justify-content-around">
-  </section>
-</div>
+  <h1 id="fiveH1" class="text-white p-2 text-center min-100-vh flex-column">5 Day Forecast</h1>
 
+  <div class = "fiveContainer d-flex justify-content-center">
+  <section class="five row justify-content-around">
+    </section>
+  </div>
 
 <!-- Search offcanvas -->
   <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-body search-container ">
+    <div class="offcanvas-body search-container">
       <label for="inputCity" class="form-label my-2">Search for a City:</label>
       <input type="text" class="form-control my-2" id="inputCity"></input>       
-      <button type="submit" class="search-btn btn btn-light btn-primary my-1 " data-bs-dismiss="offcanvas" onclick="removeImage()">Search</button>
+      <button type="submit" class="search-btn btn btn-light btn-primary my-1 " data-bs-dismiss="offcanvas">Search</button>
+      <p class="my-2">Search History: </p>
+        <div class="my-3 bg-dark text-white" id="searchDiv" style="width: 23rem;">
 
-        <div class="card my-3 bg-dark text-white border-white" style="width: 23rem;">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item bg-dark border-white"><a href="">An item</a></li>
-            <li class="list-group-item bg-dark border-white"><a href="">An item</a></li>
-            <li class="list-group-item bg-dark border-white"><a href="">An item</a></li>
+          <ul class="list-group list-group-flush cityUl">
           </ul>
         </div>
     </div>  

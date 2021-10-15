@@ -38,3 +38,8 @@ a {
   text-decoration: none;
   color: white;
 }
+
+#uvHighlight {
+  background-color: green;
+  color: yellow;
+}
