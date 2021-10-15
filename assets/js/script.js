@@ -9,6 +9,7 @@ var uvHtml = document.querySelector('.uv')
 var currentHTML = document.querySelector('.current')
 var imgDiv = document.getElementById('currentIcon')
 var cityUl = document.querySelector('.cityUl')
+var img = document.createElement('img');
 
 var key = "&appid=294893130f9503ab3af461b6a81901e4"
 var cityApi = "https://api.openweathermap.org/data/2.5/weather?q="
@@ -17,13 +18,14 @@ var metric = "&units=metric"
 var icon = "https://openweathermap.org/img/wn/"
 
 
-var oneCall = function (lat,lon,) {
+var oneCall = function (lat,lon,name) {
     var one = oneCallApi + "lat=" + lat + "&lon=" + lon + metric + key
 
     fetch (one)
     .then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
+                cityHtml.textContent = name
                 var date = moment().format("dddd, MMMM Do YYYY");
                 dateHtml.textContent = date
                 tempHtml.textContent = "Temperature: " + data.current.temp + " °C"
@@ -41,7 +43,7 @@ var oneCall = function (lat,lon,) {
                 }
 
                 uvHtml.textContent = "UV Index: " + uvNumber
-                var img = document.createElement('img');
+
                 img.setAttribute("src", icon + data.current.weather[0].icon + "@4x.png")
                 img.setAttribute("id", "icon")
                 imgDiv.appendChild(img);
@@ -120,15 +122,18 @@ var fiveDay = function (data) {
 
 var getData = function (input) {
     console.log(input)
+    
     var city = cityApi + input + key;
 
     fetch(city)
     .then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
+
                 var lat = data.coord.lat
                 var lon = data.coord.lon
-                oneCall(lat,lon);
+                var name = data.name
+                oneCall(lat,lon,name);
             })
         } else {
             alert("Invalid City Name")
@@ -149,9 +154,14 @@ var ipLocation = function (){
 
             var lat = data.latitude
             var lon = data.longitude
-            cityHtml.textContent = "IP Location: " +data.city
+            var name = data.city
 
-            oneCall(lat,lon)
+            oneCall(lat,lon,name)
+
+            if (storedCity !== null) {
+                storedArr = storedCity;
+              }
+              
             render();
         })
     })
@@ -161,8 +171,9 @@ var ipLocation = function (){
 var storedArr = []
 
 var newSearch = function (){
+
     // Remove current image on search
-    document.getElementById('icon').remove();
+    removeImg()
     var city = userInput.value
     storedArr.push(city)
     localStorage.setItem("user", JSON.stringify(storedArr));
@@ -175,8 +186,7 @@ var newSearch = function (){
  var render = function (){
 
     cityUl.innerHTML=""
-    console.log(storedCity)
-    console.log(storedArr)
+
     for (var i = 0 ; i < storedArr.length; i++){
      
         var li = document.createElement('li')
@@ -190,24 +200,26 @@ var newSearch = function (){
         searchContainer.appendChild(searchDiv)
         a.textContent = capCity
         a.setAttribute("href","#")
-        a.setAttribute("onclick","getData(value)")
+        a.setAttribute("class",".searched")
+        a.setAttribute("data-id",capCity)
+        
+        a.onclick = function(element){
+            var event = element.target;
+            var y = event.getAttribute("data-id")
+            getData(y)
+        }
 
         li.appendChild(a)
         cityUl.appendChild(li)
-        cityHtml.textContent = capCity
+ 
 
     }
  }
 
-var searchedCity = function (){
-    var historyCity = document.querySelector(".searched")
-    historyCity.addEventListener('click',searchedCity);
-    console.log("clicked")
-    var cityName = historyCity.value
-    getData(cityName)
-}
-
-
+ var removeImg = function (){
+    document.getElementById('icon').remove();
+ }
+ 
 button.addEventListener('click',newSearch);
 
 ipLocation()
